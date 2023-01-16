@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv bash
+
+USER=${USER-helx}
+HOME="/home/$USER"
+
+# default file copies first run
+if [ ! -d $HOME/.config/openbox/autostart ]; then
+    mkdir -p $HOME/.config/openbox
+    cp /defaults/autostart $HOME/.config/openbox/autostart
+    chown -R $USER:$USER $HOME/.config/openbox
+fi

@@ -1,0 +1,24 @@
+#!/usr/bin/with-contenv bash
+
+USER=${USER-helx}
+HOME="/home/$USER"
+
+# default file copies first run
+if [ ! -d $HOME/.config ]; then
+    mkdir -p $HOME/.config
+fi
+
+
+if [ ! -f $HOME/.bashrc ]; then
+    cp /defaults/bashrc $HOME/.bashrc
+fi
+
+if [ ! -f $HOME/startwm.sh ]; then
+    cp /defaults/startwm.sh $HOME/startwm.sh
+fi
+
+# permissions
+PERM=$(stat -c '%U' $HOME/.config)
+if [ "${PERM}" != "$USER" ]; then
+    chown -R $USER:$USER $HOME
+fi
