@@ -2,7 +2,7 @@
 
 # Uncomment and set TAG if it should be used instead of a timestamp. The
 # "latest" tag will always be set.
-# export TAG="0.0.1"
+# export TAG="v0.0.1"
 export IMAGE_NAME=helxplatform/webtop/base
 export REGISTRY=containers.renci.org
 
