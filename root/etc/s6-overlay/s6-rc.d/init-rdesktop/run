@@ -1,0 +1,26 @@
+#!/usr/bin/with-contenv bash
+
+USER=${USER-helx}
+HOME="/home/$USER"
+
+# default file copies first run
+if [ ! -d $HOME/.config ]; then
+    # In some environments (maybe root-squash enabled) root can not write to
+    # shares, so do some tasks as $USER.
+    sudo -u $USER mkdir -p $HOME/.config
+fi
+
+
+if [ ! -f $HOME/.bashrc ]; then
+    sudo -u $USER cp /defaults/bashrc $HOME/.bashrc
+fi
+
+if [ ! -f $HOME/startwm.sh ]; then
+    sudo -u $USER cp /defaults/startwm.sh $HOME/startwm.sh
+fi
+
+# permissions
+PERM=$(stat -c '%U' $HOME/.config)
+if [ "${PERM}" != "$USER" ]; then
+    sudo -u $USER chown -R $USER:$USER $HOME
+fi
