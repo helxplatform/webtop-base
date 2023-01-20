@@ -23,12 +23,24 @@ printf "\n\n"
 
 echo "creating new $USER with UID $USERID"
 useradd -m "$USER" -s /bin/bash -u $USERID
-mkdir -p /home/"$USER"
-chown -R "$USER" /home/"$USER"
+HOME="/home/$USER"
+mkdir -p "$HOME"
+chown -R "$USER" "$HOME"
 usermod -a -G staff "$USER"
-echo "$PASSWORD">/home/$USER/.password
-chmod 600 /home/$USER/.password
-ls -al /home/$USER
+# In some environments (maybe root-squash enabled) root can not write to
+# shares, so do some tasks as $USER.
+sudo -u $USER bash -c "echo \"$PASSWORD\">/home/$USER/.password"
+sudo -u $USER chmod 600 $HOME/.password
+# Copy the bashrc from linuxserver.io rather than one in "/etc/skel/.bashrc".
+if [ ! -f $HOME/.bashrc ]; then
+    sudo -u $USER cp /defaults/bashrc $HOME/.bashrc
+fi
+if [ ! -f $HOME/.profile ]; then
+    sudo -u $USER cp /etc/skel/.profile $HOME/.profile
+fi
+if [ ! -f $HOME/.bash_logout ]; then
+    sudo -u $USER cp /etc/skel/.bash_logout $HOME/.bash_logout
+fi
 
 if [ "$GROUPID" -ne 1000 ]; then
     echo "Modifying primary group $(id "${USER}" -g -n)"

@@ -5,20 +5,22 @@ HOME="/home/$USER"
 
 # default file copies first run
 if [ ! -d $HOME/.config ]; then
-    mkdir -p $HOME/.config
+    # In some environments (maybe root-squash enabled) root can not write to
+    # shares, so do some tasks as $USER.
+    sudo -u $USER mkdir -p $HOME/.config
 fi
 
 
 if [ ! -f $HOME/.bashrc ]; then
-    cp /defaults/bashrc $HOME/.bashrc
+    sudo -u $USER cp /defaults/bashrc $HOME/.bashrc
 fi
 
 if [ ! -f $HOME/startwm.sh ]; then
-    cp /defaults/startwm.sh $HOME/startwm.sh
+    sudo -u $USER cp /defaults/startwm.sh $HOME/startwm.sh
 fi
 
 # permissions
 PERM=$(stat -c '%U' $HOME/.config)
 if [ "${PERM}" != "$USER" ]; then
-    chown -R $USER:$USER $HOME
+    sudo -u $USER chown -R $USER:$USER $HOME
 fi

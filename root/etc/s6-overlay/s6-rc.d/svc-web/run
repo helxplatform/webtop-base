@@ -4,8 +4,10 @@ USER=${USER-helx}
 
 export HOME="/home/$USER"
 export CUSTOM_USER="$USER"
-PASSWORD=$(cat $HOME/.password)
-rm -f $HOME/.password
+PASSWORD=$(sudo -u $USER cat $HOME/.password)
+# In some environments (maybe root-squash enabled) root can not write to
+# shares, so do some tasks as $USER.
+sudo -u $USER rm -f $HOME/.password
 export AUTO_LOGIN="true"
 
 PASSWORD=$PASSWORD exec \

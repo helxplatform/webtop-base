@@ -5,7 +5,9 @@ HOME="/home/$USER"
 
 # default file copies first run
 if [ ! -d $HOME/.config/openbox/autostart ]; then
-    mkdir -p $HOME/.config/openbox
-    cp /defaults/autostart $HOME/.config/openbox/autostart
-    chown -R $USER:$USER $HOME/.config/openbox
+    # In some environments (maybe root-squash enabled) root can not write to
+    # shares, so do some tasks as $USER.
+    sudo -u $USER mkdir -p $HOME/.config/openbox
+    sudo -u $USER cp /defaults/autostart $HOME/.config/openbox/autostart
+    sudo -u $USER chown -R $USER:$USER $HOME/.config/openbox
 fi
